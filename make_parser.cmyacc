@@ -1,0 +1,87 @@
+sml
+name MakeParser
+
+terminal LOWER_IDENT of string_loc
+terminal UPPER_IDENT of string_loc
+terminal QUOTE_IDENT of string_loc
+terminal NUMBER of int_loc
+
+terminal FUN of location
+terminal IN of location
+terminal LET of location
+terminal WITH of location
+terminal VAL of location
+terminal UNIT of location
+terminal BOOL of location
+terminal INT of location
+terminal TRUE of location
+terminal FALSE of location
+terminal MATCH of location
+terminal BOX of location
+terminal DIA of location
+
+terminal LPAREN of location
+terminal RPAREN of location
+terminal LBRACK of location
+terminal RBRACK of location
+terminal LBRACE of location
+terminal RBRACE of location
+
+terminal COLON of location
+terminal RARROW of location precr 20
+terminal RDARROW of location
+terminal STAR of location
+terminal EQUAL of location
+terminal DOT of location
+terminal COMMA of location
+terminal MINUS of location
+terminal PLUS of location
+terminal UNDERSCORE of location
+terminal BAR of location
+
+nonterminal Term : term =
+  1:TermApp                                            => term_id
+  1:FUN LPAREN 2:Var COLON 3:Type RPAREN RARROW 4:Term => tabs
+  1:LET BOX 2:ValidVar EQUAL 3:Term IN 4:Term          => tletbox
+
+nonterminal TermApp : term =
+  1:TermAtom           => term_id
+  1:BOX 2:TermAtom     => tbox
+  1:DIA 2:ExprAtom     => tdia
+  1:TermApp 2:TermAtom => tapp
+
+nonterminal TermAtom : term =
+  1:Var                => tvar
+  1:ValidVar           => tvvar
+  LPAREN 1:Term RPAREN => term_id
+
+nonterminal Expr : expr =
+  1:ExprAtom                                  => expr_id
+  1:LET DIA 2:Var EQUAL 3:Term IN 4:Expr      => eletdia
+  1:LET BOX 2:ValidVar EQUAL 3:Term IN 4:Expr => eletbox
+
+nonterminal ExprAtom : expr =
+  1:LBRACE 2:Term 3:RBRACE => eterm
+  LPAREN 1:Expr RPAREN     => expr_id
+
+nonterminal Var : var =
+  1:LOWER_IDENT => true_var
+
+nonterminal ValidVar : valid_var =
+  1:UPPER_IDENT => vvar
+
+nonterminal Type : ty =
+  1:TypeApp            => type_id
+  1:Type RARROW 2:Type => tyarrow
+
+nonterminal TypeApp : ty =
+  1:TypeAtom       => type_id
+  1:BOX 2:TypeAtom => tybox
+  1:DIA 2:TypeAtom => tydia
+
+nonterminal TypeAtom : ty =
+  LPAREN 1:Type RPAREN => type_id
+  1:BOOL               => tybool
+  1:INT                => tyint
+
+start Term

@@ -1,0 +1,9 @@
+[submodule "wbt"]
+	path = wbt
+	url = https://github.com/elpinal/wbt
+[submodule "sml-lexer"]
+	path = sml-lexer
+	url = https://github.com/elpinal/sml-lexer
+[submodule "cmlib"]
+	path = cmlib
+	url = https://github.com/elpinal/cmlib-mosml
